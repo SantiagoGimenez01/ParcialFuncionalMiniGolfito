@@ -40,6 +40,8 @@ mayorSegun f a b
 --Punto 1
 type PaloDeGolf = Habilidad -> Tiro
 
+type Palos = [PaloDeGolf]
+
 putter :: PaloDeGolf
 putter habilidad = UnTiro{velocidad = 10, precision = (doble . precisionJugador) habilidad , altura = 0}
 
@@ -65,4 +67,6 @@ alturaHierros 1 = 0
 alturaHierros 2 = 0
 alturaHierros n = n - 3
 
-data Palos = Putter | Madera | Hierros deriving(Show, Eq)
+palosDisponiblesEnElJuego :: Palos
+palosDisponiblesEnElJuego = [putter, madera] ++ map hierros [1..10] 
+
