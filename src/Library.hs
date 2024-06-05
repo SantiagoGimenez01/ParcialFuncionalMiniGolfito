@@ -70,3 +70,6 @@ alturaHierros n = n - 3
 palosDisponiblesEnElJuego :: Palos
 palosDisponiblesEnElJuego = [putter, madera] ++ map hierros [1..10] 
 
+golpe :: Jugador -> PaloDeGolf -> Tiro
+golpe jugador palo = palo (habilidad jugador)
+
