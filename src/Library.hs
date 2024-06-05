@@ -70,6 +70,54 @@ alturaHierros n = n - 3
 palosDisponiblesEnElJuego :: Palos
 palosDisponiblesEnElJuego = [putter, madera] ++ map hierros [1..10] 
 
+--Punto 2
 golpe :: Jugador -> PaloDeGolf -> Tiro
 golpe jugador palo = palo (habilidad jugador)
+
+--Punto 3
+type Obstaculo = Tiro -> Tiro
+type Condicion = Tiro -> Bool
+type Efecto = Tiro -> Tiro
+
+tiroParado :: Tiro
+tiroParado = UnTiro 0 0 0
+
+tunelConRampita :: Obstaculo
+tunelConRampita tiro = tiroVsObstaculo tiro superaTunelConRampita efectoTunelConRampita
+
+superaTunelConRampita :: Tiro -> Bool
+superaTunelConRampita tiro = (precision tiro > 90) && (altura tiro == 0)
+
+efectoTunelConRampita :: Tiro -> Tiro
+efectoTunelConRampita tiro = tiro{velocidad = (doble . velocidad) tiro, precision = 100, altura = 0}
+
+laguna :: Number -> Obstaculo
+laguna largo tiro = tiroVsObstaculo tiro superaLaguna (efectoLaguna largo)
+
+superaLaguna :: Tiro -> Bool
+superaLaguna tiro = (velocidad tiro > 80) && between 1 5 (altura tiro)
+
+efectoLaguna :: Number -> Tiro -> Tiro
+efectoLaguna largo tiro = tiro{altura = altura tiro / largo}
+
+hoyo :: Obstaculo
+hoyo tiro = tiroVsObstaculo tiro superaHoyo efectoHoyo
+
+superaHoyo :: Condicion
+superaHoyo tiro = between 5 20 (velocidad tiro) && (precision tiro > 95) && (altura tiro == 0)
+
+efectoHoyo :: Efecto
+efectoHoyo tiro = tiroParado
+
+tiroVsObstaculo :: Tiro -> Condicion -> Efecto -> Tiro
+tiroVsObstaculo tiro condicion efecto 
+    | condicion tiro = efecto tiro
+    | otherwise = tiroParado 
+
+
+
+
+
+
+
 
