@@ -134,9 +134,17 @@ elPaloMasUtil jugador obstaculos =
     maximoSegun (\palo -> cuantosObstaculosConsecutivosSupera obstaculos (golpe jugador palo)) palosDisponiblesEnElJuego
 
 
+padresPerdedores :: [(Jugador, Puntos)] -> [String]
+padresPerdedores jugadores = map padre (filtrarNiñosPerdedores jugadores)
 
+filtrarNiñosPerdedores :: [(Jugador, Puntos)] -> [Jugador]
+filtrarNiñosPerdedores jugadores = filter (\jugador -> (not . esGanador) jugador) jugadores
 
+niñoGanador :: [(Jugador, Puntos)] -> (Jugador, Puntos)
+niñoGanador jugadores = maximoSegun (\jugador -> snd jugador) jugadores
 
+esGanador :: (Jugador, Puntos) -> [(Jugador, Puntos)] -> Bool
+esGanador jugador jugadores = jugador == niñoGanador jugadores
 
 
 
