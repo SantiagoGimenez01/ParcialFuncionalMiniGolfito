@@ -114,6 +114,25 @@ tiroVsObstaculo tiro condicion efecto
     | condicion tiro = efecto tiro
     | otherwise = tiroParado 
 
+palosUtiles :: Jugador -> Obstaculo -> Palos
+palosUtiles jugador obstaculo = filter(paloSuperaObstaculo jugador obstaculo) palosDisponiblesEnElJuego
+
+paloSuperaObstaculo :: Jugador -> Obstaculo -> PaloDeGolf -> Bool
+paloSuperaObstaculo jugador obstaculo palo = obstaculo (golpe jugador palo) /= tiroParado 
+
+tiroSuperaObstaculo :: Tiro -> Obstaculo -> Bool
+tiroSuperaObstaculo tiro obstaculo = obstaculo tiro /= tiroParado
+
+cuantosObstaculosConsecutivosSupera :: [Obstaculo] -> Tiro -> Number
+cuantosObstaculosConsecutivosSupera [] _ = 0
+cuantosObstaculosConsecutivosSupera (x:xs) tiro 
+    | tiroSuperaObstaculo tiro x = 1 + cuantosObstaculosConsecutivosSupera xs tiro
+    | otherwise = 0
+
+elPaloMasUtil :: Jugador -> [Obstaculo] -> PaloDeGolf
+elPaloMasUtil jugador obstaculos = 
+    maximoSegun (\palo -> cuantosObstaculosConsecutivosSupera obstaculos (golpe jugador palo)) palosDisponiblesEnElJuego
+
 
 
 
